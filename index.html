@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e1f5fe);
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .task-form, .task-list {
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .task-item {
+      background: linear-gradient(to right, #e3f2fd, #f0f7ff);
+      border-bottom: 1px solid #ccc;
+      padding: 10px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Task Manager</h1>
+
+  <div class="task-form">
+    <h2>Add Task</h2>
+    <input type="text" id="title" placeholder="Title">
+    <textarea id="description" placeholder="Description"></textarea>
+    <button onclick="addTask()">Add Task</button>
+  </div>
+
+  <div class="task-list">
+    <h2>All Tasks</h2>
+    <div id="tasks"></div>
+  </div>
+
+  <script>
+    const API_URL = 'http://127.0.0.1:8000/tasks/';
+
+    async function fetchTasks() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      const tasksDiv = document.getElementById('tasks');
+      tasksDiv.innerHTML = '';
+      data.forEach(task => {
+        const div = document.createElement('div');
+        div.className = 'task-item';
+        const checkboxId = `task-${task.id}`;
+        div.innerHTML = `
+          <strong>${task.title}</strong> - ${task.description}<br>
+          Completed: <input type="checkbox" id="${checkboxId}" ${task.completed ? 'checked' : ''} onchange="toggleCompleted(${task.id}, this.checked)">
+        `;
+        tasksDiv.appendChild(div);
+      });
+    }
+
+    async function addTask() {
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, completed: false })
+      });
+      if (res.ok) {
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        fetchTasks();
+      } else {
+        alert('Error adding task');
+      }
+    }
+
+    async function toggleCompleted(taskId, completed) {
+      const taskRes = await fetch(`${API_URL}${taskId}`);
+      const task = await taskRes.json();
+      task.completed = completed;
+
+      await fetch(`${API_URL}${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task)
+      });
+
+      fetchTasks();
+    }
+
+    fetchTasks();
+  </script>
+</body>
+</html>
