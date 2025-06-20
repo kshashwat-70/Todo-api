@@ -188,6 +188,4 @@ curl -X DELETE http://127.0.0.1:8000/tasks/1
 
 ---
 
-## 📄 License
 
-This project is licensed under the MIT License.
