@@ -218,6 +218,9 @@ pytest
 coverage run -m pytest
 coverage report -m
 ```
+## 🧪 Test Coverage Screeenshot
+
+![Test Coverage](tests/coverage.png)
 
 ### 🧪 Testing Files Used
 
