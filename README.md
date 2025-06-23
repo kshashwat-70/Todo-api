@@ -187,5 +187,57 @@ curl -X DELETE http://127.0.0.1:8000/tasks/1
 ```
 
 ---
+## ✅ How to Run Tests
+
+This project includes unit, integration, and API tests to ensure your API works as expected.
+
+### 🧪 Step-by-Step Guide
+
+1. **Activate the virtual environment** (if not already active):
+
+```bash
+# Windows
+venv\Scripts\activate
+
+# macOS/Linux
+source venv/bin/activate
+```
+2. **Install the testing dependencies** (already in requirements.txt):
+
+```bash
+pip install -r requirements.txt
+```
+3. **Run the tests using pytest**:
+
+```bash
+pytest
+```
+4. **Generate a coverage report**:
+
+ ```bash
+coverage run -m pytest
+coverage report -m
+```
+
+### 🧪 Testing Files Used
+
+| File Name            | Purpose                                |
+|----------------------|----------------------------------------|
+| `test_main.py`       | Unit tests for API logic               |
+| `test_integration.py`| Integration tests for API and database |
+
+---
+
+## 🧪 Testing Frameworks and Tools Used
+
+- **Pytest**: For writing and running test cases.
+- **Coverage.py**: To measure code coverage and identify untested parts of the codebase.
+- **FastAPI TestClient**: To simulate API requests for testing purposes.
+
+---
+
+
+
+
 
 
